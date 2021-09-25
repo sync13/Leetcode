@@ -22,6 +22,7 @@ Constraints:
 
 
 #include<iostream>
+#include<vector>
 
 using namespace std;
 
@@ -30,25 +31,27 @@ class Solution
 public:
     double champagne_tower(int poured, int row, int col)
     {
-        double dp[101][101];
-
-        dp[0][0] = poured;
         
-        for (int i=1; i< 101; i++)
-        {
-            for(int j=0; j<i; j++)
-            {
-                if(dp[i-1][j] > 1.0)
-                {
-                    double extra = dp[i-1][j] - 1;
-                    dp[i-1][j] = 1;
-                    dp[i][j] += extra/2.0;
-                    dp[i][j+1] += extra/2.0;
+        if (poured == 0)
+            return 0;
+        
+        vector<vector<double>>dp(101, vector<double>(101, 0.0));
+        dp[0][0] = (double)poured;
 
+        for(int r=0; r<row; r++)
+        {
+            for(int c=0; c<=r; c++)
+            {
+                double extra = (dp[r][c]-1)/2.0;
+                if(extra > 0.0)
+                {
+                    dp[r+1][c] += extra;
+                    dp[r+1][c+1] += extra;
                 }
             }
         }
-        return dp[row][col];
+
+        return min((double)1, dp[row][col]);
     }
 };
 
